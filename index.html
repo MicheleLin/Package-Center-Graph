@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link href="src/nv.d3.css" rel="stylesheet" type="text/css">
+        <style>
+            body {
+                padding-top: 50px;
+                padding-bottom: 20px;
+                overflow-y:scroll;
+            }
+            text {
+                font: 12px sans-serif;
+            }
+
+            svg {
+                display: block;
+            }
+
+            #chart1 svg {
+                /*height: 500px;*/
+                min-width: 500px;
+                min-height: 300px;
+            }
+            #chart1 {
+               margin-top: 100px;
+
+            }
+
+        </style>
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="css/main.css">
+
+        <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    </head>
+    <body class='with-3d-shadow with-transitions'>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Project name</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <form class="navbar-form navbar-right" role="form">
+            <div class="form-group">
+              <input type="text" placeholder="Email" class="form-control">
+            </div>
+            <div class="form-group">
+              <input type="password" placeholder="Password" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-success">Sign in</button>
+          </form>
+        </div><!--/.navbar-collapse -->
+      </div>
+    </div>
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+      <div class="container">
+       <!-- <div id="chart1" >
+          <svg style="height: 500px;"></svg>
+        </div>-->
+        JUMBOTRON STUFF
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="row">
+        <div class="col-md-6">
+          <h2>Heading</h2>
+            <div id="chart1" >
+               <svg id="chart1" style="height: 500px;"></svg>
+            </div>
+        </div>
+      
+
+       <div class="row">
+        <div class="col-md-6">
+          <h2>Heading</h2>
+            MINI SECTION
+        </div>
+            
+    </div>
+
+    <script src="lib/d3.v3.js"></script>
+    <script src="nv.d3.js"></script>
+    <script src="src/tooltip.js"></script>
+    <script src="src/utils.js"></script>
+    <script src="src/interactiveLayer.js"></script>
+    <script src="src/models/legend.js"></script>
+    <script src="src/models/axis.js"></script>
+    <script src="src/models/scatter.js"></script>
+    <script src="src/models/line.js"></script>
+    <script src="src/models/lineChart.js"></script>
+
+    <script>
+    // Wrapping in nv.addGraph allows for '0 timeout render', stores rendered charts in nv.graphs, and may do more in the future... it's NOT required
+    var chart;
+
+    nv.addGraph(function() {
+      chart = nv.models.lineChart()
+      .options({
+        margin: {left: 100, bottom: 100, right: 100},
+        x: function(d,i) {return i},
+        showXAxis: true,
+        showYAxis: true,
+        transitionDuration: 250
+      })
+      .forceY([0,10])
+      ;
+
+      // chart sub-models (ie. xAxis, yAxis, etc) when accessed directly, return themselves, not the parent chart, so need to chain separately
+
+      var months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"]
+
+
+      chart.xAxis.tickValues([0,1,2,3,4,5,6,7,8,9,10,11])
+        .tickFormat(function(d){
+             return months[d]
+        })
+        .axisLabel("Month")
+        ;   
+
+      chart.yAxis
+        .axisLabel('Number of Packages')
+        .tickFormat(d3.format(',f'))
+        ;
+
+      d3.select('#chart1 svg')
+        .datum(packageData())
+        .call(chart);
+
+      //TODO: Figure out a good way to do this automatically
+      nv.utils.windowResize(chart.update);
+      //nv.utils.windowResize(function() { d3.select('#chart1 svg').call(chart) });
+
+      chart.dispatch.on('stateChange', function(e) { nv.log('New State:', JSON.stringify(e)); });
+
+      return chart;
+    });
+
+    function packageData() {
+       var y2010 = [{y:11644},{y:15935},{y:9020},{y:8785},{y:4768},{y:3341},{y:2548},{y:4762},{y:23848},{y:12970},{y:9357},{y:8999}],
+           y2011 = [{y:11311}, {y:15718}, {y:8759}, {y:8288}, {y:4035}, {y:3210}, {y:2336}, {y:9464}, {y:30812}, {y:12099}, {y:9820}, {y:9057}]
+           y2012 = [{y:13301},{y:13557},{y:8676},{y:8546},{y:4253},{y:2757}, {y:2171},{y:9984},{y:33817},{y:13062},{y:11387},{y:9338}]
+           y2013 = [{y:12217},{y:15616},{y:9214},{y:10167},{y:6292},{y:2923},{y:2571},{y:6700},{y:24927},{y:15588},{y:10187},{y:11282}]
+       ;
+
+      return [
+        {
+          values:y2010,
+          key: "2010",
+          color: "#ff7f0e"
+        },
+
+        {
+          values:y2011,
+          key: "2011",
+          color: "#2ca02c"
+        },
+     
+        {    
+          values:y2012,
+          key: "2012",
+          color: "#2222ff"
+        },
+
+        {    
+          values:y2013,
+          key: "2013",
+          color: "#9933ff"
+        }
+      ];
+    }
+
+    </script>
+
+
+
+
+
+
+   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.1.min.js"><\/script>')</script>
+
+        <script src="js/vendor/bootstrap.min.js"></script>
+
+        <script src="js/main.js"></script>
+
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+        <script>
+            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+            e.src='//www.google-analytics.com/analytics.js';
+            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+            ga('create','UA-XXXXX-X');ga('send','pageview');
+        </script>
+    </body>
+</html>
