@@ -18,9 +18,9 @@ svg {
 }
 
 #chart1 svg {
-  height: 500px;
-  min-width: 100px;
-  min-height: 100px;
+  /*height: 500px;*/
+  min-width: 500px;
+  min-height: 300px;
 /*
   margin: 50px;
   Minimum height and width is a good idea to prevent negative SVG dimensions...
@@ -30,7 +30,7 @@ svg {
 
 }
 #chart1 {
-  margin-top: 200px;
+  margin-top: 100px;
 
 }
 </style>
@@ -64,11 +64,13 @@ nv.addGraph(function() {
     showYAxis: true,
     transitionDuration: 250
   })
+  .forceY([0,10])
   ;
 
   // chart sub-models (ie. xAxis, yAxis, etc) when accessed directly, return themselves, not the parent chart, so need to chain separately
 
-  var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+  var months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"]
+
 
   chart.xAxis.tickValues([0,1,2,3,4,5,6,7,8,9,10,11])
     .tickFormat(function(d){
@@ -124,7 +126,7 @@ function packageData() {
     {    
       values:y2013,
       key: "2013",
-      color: "#667711"
+      color: "#9933ff"
     }
   ];
 }
